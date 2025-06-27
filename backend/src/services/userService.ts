@@ -1,5 +1,8 @@
 import { db } from "../database";
-import { User, CreateUserRequest, UpdateUSerRequest } from "../types/user";
+import { User, CreateUserRequest, UpdateUserRequest } from "../types/user";
+const bcrypt = require("bcrypt");
+
+const SALT_ROUNDS = 10;
 
 export class UserService {
   // need to define User type and methods inside of the user type file
@@ -13,17 +16,65 @@ export class UserService {
   }
 
   static async createUser(userData: CreateUserRequest): Promise<User> {
-    const [user] = await db("user").insert(userData).returning('*')
-    return user
+    const [user] = await db("users").insert(userData).returning("*");
+    return user;
   }
 
-  static async updateUserId(id: number, userData: UpdateUSerRequest): Promise<User | null> {
+  static async updateUser(
+    id: number,
+    userData: UpdateUserRequest
+  ): Promise<User | null> {
     const [user] = await db("users")
       .where({ id })
-      // adjust this to accurately update the user data
-      .update({ ...userData: db.fn.now() })
+      .update({ ...userData, updated_at: db.fn.now() })
       .returning("*");
 
-      return user | null
+    return user || null;
+  }
+
+  static async create(email: string, username: string, password: string) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return {
+        success: false,
+        message: "Email must be valid email",
+      };
+    }
+    if (username.length < 6) {
+      return {
+        success: false,
+        message: "Username must be at least 6 characters long. ",
+      };
+    }
+
+    try {
+      // hash the plain-text password using bcrypt before storing it in the database
+      const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+
+      const query = `INSERT INTO users (username, password, email)
+      VALUES (?, ?, ?) RETURNING *;`;
+      const result = await db.raw(query, [email, username, passwordHash]);
+
+      const rawUserData = result.rows[0];
+      return {
+        success: true,
+        user: rawUserData,
+      };
+    } catch (error: any) {
+      // unique constrain violation
+      if (error.code === "23505") {
+        return {
+          success: false,
+          message: "Username already exists. Please choose another one",
+        };
+      }
+
+      // Other DB or system errors
+      return {
+        success: false,
+        message: "An unexpected error occurred.",
+        detail: error.message,
+      };
+    }
   }
 }

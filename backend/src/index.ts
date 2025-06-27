@@ -4,17 +4,32 @@ import { testConnection } from "./database";
 import { TaskService } from "./services/taskService";
 import { CreateTaskRequest, UpdateTaskRequest } from "./types/task";
 import * as ai from "./prompts/taskInsights";
+import { checkAuthentication } from "../middleware/checkAuthentication";
+import * as auth from "../controllers/authControllers";
+const session = require("express-session");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }, // Set to true in production with HTTPS
+  })
+);
 
 // Test database connection on startup
 testConnection()
   .then(() => console.log("✅ Database connected successfully"))
   .catch((error) => console.error("❌ Database connection failed:", error));
+
+/////////////////////////////////
+// Task Routes
+/////////////////////////////////
 
 // Basic route
 app.get("/", (req: Request, res: Response) => {
@@ -92,9 +107,21 @@ app.patch("/api/tasks/:id/toggle", async (req: Request, res: Response) => {
   }
 });
 
-// AI routes
+/////////////////////////////////
+// AI Routes
+/////////////////////////////////
+
 app.post("/api/insights", ai.insights);
 app.post("/api/finalInsight", ai.finalInsight);
+
+/////////////////////////////////
+// User Routes
+/////////////////////////////////
+
+app.post("/api/auth/register", auth.registerUser);
+app.post("/api/auth/login", auth.loginUser);
+app.get("/api/auth/me", checkAuthentication, auth.showMe);
+app.delete("/api/auth/logout", auth.logoutUser);
 
 app.listen(port, () => {
   console.log(`🚀 Backend server listening at http://localhost:${port}`);

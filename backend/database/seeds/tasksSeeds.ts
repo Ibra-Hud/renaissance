@@ -1,7 +1,7 @@
 /**
  * @param {import('knex').Knex} knex
  */
-exports.seed = function (knex) {
+exports.seed = function (knex: any) {
   // Deletes ALL existing entries
   return knex("tasks")
     .del()

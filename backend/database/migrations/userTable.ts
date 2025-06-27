@@ -1,8 +1,8 @@
 /**
  * @param {import('knex').Knex} knex
  */
-exports.up = function (knex) {
-  return knex.schema.createTable("users", (table) => {
+exports.up = function (knex: any) {
+  return knex.schema.createTable("users", (table: any) => {
     table.increments("id").primary();
     table.string("username").notNullable().unique();
     table.string("password").notNullable();
@@ -14,6 +14,6 @@ exports.up = function (knex) {
 /**
  * @param {import('knex').Knex} knex
  */
-exports.down = function (knex) {
+exports.down = function (knex: any) {
   return knex.schema.dropTable("users");
 };
