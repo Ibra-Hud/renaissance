@@ -17,5 +17,8 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "homepage": "https://github.com/Ibra-Hud/renaissance#readme"
+  "homepage": "https://github.com/Ibra-Hud/renaissance#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
 }
