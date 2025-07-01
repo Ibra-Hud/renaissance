@@ -12,7 +12,11 @@ export const registerUser = async (
   req: AuthenticatedRequest,
   res: Response
 ) => {
+  console.log("🎯 registerUser controller hit!");
+  console.log("📨 Request body:", req.body);
+
   if (!req.body) {
+    console.log("❌ No request body found");
     return res
       .status(400)
       .send({ message: "Username, password, and email required" });
@@ -20,20 +24,24 @@ export const registerUser = async (
 
   console.log("Register Body:", req.body);
 
-  const { email, username, password } = req.body;
-  if (!email || !username || !password) {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    console.log("❌ Missing required fields");
     return res.status(400).send({ message: "All fields are required" });
   }
 
-  const result = await UserService.create(email, username, password);
+  console.log("✅ All fields present, calling UserService.create");
+  const result = await UserService.create(username, email, password);
 
   if (!result || result.success === false) {
+    console.log("❌ UserService.create failed:", result);
     return res.status(400).send({
       message: result?.message || "Registration failed.",
       ...(result?.detail && { detail: result.detail }),
     });
   }
 
+  console.log("✅ User created successfully:", result.user);
   req.session!.userId = result.user.id;
   res.status(201).send({
     id: result.user.id,

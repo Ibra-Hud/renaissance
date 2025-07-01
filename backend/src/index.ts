@@ -11,6 +11,13 @@ const session = require("express-session");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Debug middleware to log all requests
+app.use((req: Request, res: Response, next) => {
+  console.log(`🔍 ${req.method} ${req.url} - ${new Date().toISOString()}`);
+  console.log(`📦 Body:`, req.body);
+  next();
+});
+
 // Middleware
 app.use(express.json());
 app.use(
@@ -26,6 +33,19 @@ app.use(
 testConnection()
   .then(() => console.log("✅ Database connected successfully"))
   .catch((error) => console.error("❌ Database connection failed:", error));
+
+/////////////////////////////////
+// Test Routes
+/////////////////////////////////
+
+// Test route to verify backend is working
+app.get("/test", (req: Request, res: Response) => {
+  console.log("🧪 Test route hit!");
+  res.json({
+    message: "Backend is working!",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 /////////////////////////////////
 // Task Routes
@@ -123,6 +143,7 @@ app.post("/api/auth/login", auth.loginUser);
 app.get("/api/auth/me", checkAuthentication, auth.showMe);
 app.delete("/api/auth/logout", auth.logoutUser);
 
-app.listen(port, () => {
-  console.log(`🚀 Backend server listening at http://localhost:${port}`);
+app.listen(Number(port), "0.0.0.0", () => {
+  console.log(`🚀 Backend server listening at http://0.0.0.0:${port}`);
+  console.log(`🌐 Accessible at http://192.168.1.138:${port}`);
 });
