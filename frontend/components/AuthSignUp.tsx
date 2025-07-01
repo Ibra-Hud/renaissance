@@ -34,7 +34,7 @@ const AuthSignUp = () => {
         `Welcome, ${username}, you're successfully registered.`
       );
     } catch (error) {
-      Alert.alert("Error", `Error submitting the user data, ${error}`);
+      // Alert.alert("Error", `Error submitting the user data, ${error}`);
       console.error(error);
     }
   };
