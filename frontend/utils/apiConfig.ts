@@ -1,5 +1,7 @@
 // API Configuration
-export const API_BASE_URL = "http://localhost:3000";
+// Note: When running Expo on a device or emulator, use your machine's IP address instead of localhost
+// You can find your IP by running: ipconfig (Windows) or ifconfig (Mac/Linux)
+export const API_BASE_URL = "http://172.26.47.136:3000";
 
 // API Endpoints
 export const API_ENDPOINTS = {

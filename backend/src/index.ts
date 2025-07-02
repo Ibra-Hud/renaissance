@@ -18,6 +18,27 @@ app.use((req: Request, res: Response, next) => {
   next();
 });
 
+// CORS middleware - Add this to handle cross-origin requests from Expo
+app.use((req: Request, res: Response, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 // Middleware
 app.use(express.json());
 app.use(

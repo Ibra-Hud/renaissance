@@ -33,19 +33,19 @@ export class UserService {
   }
 
   static async create(email: string, username: string, password: string) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return {
-        success: false,
-        message: "Email must be valid email",
-      };
-    }
-    if (username.length < 6) {
-      return {
-        success: false,
-        message: "Username must be at least 6 characters long. ",
-      };
-    }
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!emailRegex.test(email)) {
+    //   return {
+    //     success: false,
+    //     message: "Email must be valid email",
+    //   };
+    // }
+    // if (username.length < 6) {
+    //   return {
+    //     success: false,
+    //     message: "Username must be at least 6 characters long. ",
+    //   };
+    // }
 
     try {
       // hash the plain-text password using bcrypt before storing it in the database
