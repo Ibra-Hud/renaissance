@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = "http://localhost:3000";
+export const API_BASE_URL = "http://10.0.13.161:3000";
 
 // API Endpoints
 export const API_ENDPOINTS = {

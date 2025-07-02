@@ -27,7 +27,7 @@ const AuthSignUp = () => {
       return;
     }
     try {
-      const response = await registerUser(username, email, password);
+      const response = await registerUser({ username, email, password });
       if (!response) throw new Error("Error submitting data to server");
       Alert.alert(
         "Success",

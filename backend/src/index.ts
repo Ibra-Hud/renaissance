@@ -145,5 +145,5 @@ app.delete("/api/auth/logout", auth.logoutUser);
 
 app.listen(Number(port), "0.0.0.0", () => {
   console.log(`🚀 Backend server listening at http://0.0.0.0:${port}`);
-  console.log(`🌐 Accessible at http://192.168.1.138:${port}`);
+  console.log(`🌐 Accessible at http://172.26.32.1:${port}`);
 });

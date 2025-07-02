@@ -1,6 +1,6 @@
 import { db } from "../database";
 import { User, CreateUserRequest, UpdateUserRequest } from "../types/user";
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const SALT_ROUNDS = 10;
 
@@ -33,13 +33,7 @@ export class UserService {
   }
 
   static async create(email: string, username: string, password: string) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return {
-        success: false,
-        message: "Email must be valid email",
-      };
-    }
+    // Validate username length requirement
     if (username.length < 6) {
       return {
         success: false,

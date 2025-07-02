@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserService } from "../src/services/userService";
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 interface AuthenticatedRequest extends Request {
   session?: {
